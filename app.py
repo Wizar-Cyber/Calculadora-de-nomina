@@ -77,6 +77,7 @@ st.markdown(f"""
             border-radius: 5px;
             border: none !important;
             height: 40px !important;
+            font-size: 14px !important;
         }}
         
         .stButton > button:hover {{
@@ -87,6 +88,13 @@ st.markdown(f"""
         h1, h2, h3, h4, h5 {{
             color: white !important;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9) !important;
+            word-break: break-word;
+        }}
+        
+        /* Título principal responsivo */
+        h1 {{
+            font-size: 2.5rem !important;
+            line-height: 1.1 !important;
         }}
         
         /* Divisores en BLANCO */
@@ -129,6 +137,33 @@ st.markdown(f"""
         
         div[data-testid="metric-container"] span {{
             color: white !important;
+        }}
+        
+        /* Responsive para móvil */
+        @media (max-width: 640px) {{
+            h1 {{
+                font-size: 1.8rem !important;
+                line-height: 1.1 !important;
+                margin-bottom: 0.5rem !important;
+            }}
+            
+            h2, .stSubheader {{
+                font-size: 1.4rem !important;
+            }}
+            
+            .stWrite, .stMarkdown {{
+                font-size: 0.95rem !important;
+            }}
+            
+            .stButton > button {{
+                font-size: 12px !important;
+                height: 36px !important;
+                padding: 6px 10px !important;
+            }}
+            
+            label {{
+                font-size: 0.95rem !important;
+            }}
         }}
     </style>
 """, unsafe_allow_html=True)
@@ -201,11 +236,15 @@ st.divider()
 
 st.subheader("📋 Registros agregados")
 for i,r in enumerate(st.session_state.turnos_reg):
-    colA,colB,colC,colD = st.columns([3,3,3,1])
-    colA.write(r[0])
-    colB.write(r[1])
-    colC.write(r[2])
-    if colD.button("❌",key=i):
+    colA,colB,colC,colD = st.columns([2,2.5,2.5,0.5])
+    with colA:
+        st.write(f"**{r[0]}**")
+    with colB:
+        st.write(f"{r[1]}")
+    with colC:
+        st.write(f"{r[2]}")
+    with colD:
+        if st.button("❌",key=i, use_container_width=True):
         st.session_state.turnos_reg.pop(i)
         # Recalcular todo desde cero
         st.session_state.calc.reinicializar(st.session_state.quincena)
