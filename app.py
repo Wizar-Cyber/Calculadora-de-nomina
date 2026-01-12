@@ -164,6 +164,22 @@ st.markdown(f"""
             label {{
                 font-size: 0.95rem !important;
             }}
+            
+            /* Botones de turnos en móvil */
+            .stColumn:last-child .stButton > button {{
+                padding: 4px 8px !important;
+                height: 32px !important;
+                font-size: 14px !important;
+            }}
+        }}
+        
+        /* Layout para web - botón alineado */
+        @media (min-width: 641px) {{
+            .stColumn:last-child {{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }}
         }}
     </style>
 """, unsafe_allow_html=True)
@@ -236,34 +252,33 @@ st.divider()
 
 st.subheader("📋 Registros agregados")
 for i,r in enumerate(st.session_state.turnos_reg):
-    colA,colB,colC,colD = st.columns([2,2.5,2.5,0.5])
-    with colA:
-        st.write(f"**{r[0]}**")
-    with colB:
-        st.write(f"{r[1]}")
-    with colC:
-        st.write(f"{r[2]}")
-    with colD:
-        if st.button("❌",key=i, use_container_width=True):
-        st.session_state.turnos_reg.pop(i)
-        # Recalcular todo desde cero
-        st.session_state.calc.reinicializar(st.session_state.quincena)
-        # Re-agregar los turnos que quedan
-        for codigo, _, _ in st.session_state.turnos_reg:
-            if codigo in turnos_base:
-                t = turnos_base[codigo]
-                st.session_state.calc.agregar_turno(t)
-            elif codigo == "SUSP":
-                st.session_state.calc.agregar_suspension()
-            elif codigo == "LIC":
-                st.session_state.calc.agregar_licencia()
-            elif codigo == "CP":
-                st.session_state.calc.agregar_cp()
-            elif codigo == "INCAP":
-                st.session_state.calc.agregar_incapacidad()
-            elif codigo == "DISPO":
-                pass  # Los DISPO se re-agregan con el código original
-        st.rerun()
+    # Layout responsive para turnos
+    col_content, col_btn = st.columns([19, 1])
+    
+    with col_content:
+        st.write(f"**{r[0]}** • {r[1]} → {r[2]}")
+    
+    with col_btn:
+        if st.button("❌", key=f"btn_{i}"):
+            st.session_state.turnos_reg.pop(i)
+            # Recalcular todo desde cero
+            st.session_state.calc.reinicializar(st.session_state.quincena)
+            # Re-agregar los turnos que quedan
+            for codigo, _, _ in st.session_state.turnos_reg:
+                if codigo in turnos_base:
+                    t = turnos_base[codigo]
+                    st.session_state.calc.agregar_turno(t)
+                elif codigo == "SUSP":
+                    st.session_state.calc.agregar_suspension()
+                elif codigo == "LIC":
+                    st.session_state.calc.agregar_licencia()
+                elif codigo == "CP":
+                    st.session_state.calc.agregar_cp()
+                elif codigo == "INCAP":
+                    st.session_state.calc.agregar_incapacidad()
+                elif codigo == "DISPO":
+                    pass  # Los DISPO se re-agregan con el código original
+            st.rerun()
 
 st.divider()
 
