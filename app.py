@@ -27,50 +27,73 @@ st.markdown(f"""
             background-attachment: fixed;
         }}
         
-        /* Hacer elementos más legibles */
-        .stMarkdown, .stMetric, .stWrite {{
-            color: white;
+        /* Labels en blanco con mejor contraste - TODOS */
+        label {{
+            color: white !important;
+            font-weight: 600;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
         }}
         
-        /* Estilos para inputs y selectbox */
-        .stTextInput > div > div > input,
+        .stMarkdown p, .stMarkdown h1, .stMarkdown h2, .stMarkdown h3 {{
+            color: white !important;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+        }}
+        
+        /* Selectbox con ancho full */
+        .stSelectbox {{
+            width: 100% !important;
+        }}
+        
         .stSelectbox > div > div > select {{
             background-color: rgba(255, 255, 255, 0.95) !important;
             color: #000 !important;
             border-radius: 5px;
+            height: 40px !important;
+            width: 100% !important;
         }}
         
-        /* Estilos para botones */
+        /* Inputs de texto */
+        .stTextInput > div > div > input {{
+            background-color: rgba(255, 255, 255, 0.95) !important;
+            color: #000 !important;
+            border-radius: 5px;
+            height: 40px !important;
+        }}
+        
+        /* Form container - simetrico con selectbox */
+        .stForm {{
+            background-color: rgba(0, 0, 0, 0.15) !important;
+            padding: 15px !important;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            margin-top: -8px !important;
+        }}
+        
+        /* Botones */
         .stButton > button {{
             background-color: rgba(31, 119, 180, 0.95) !important;
             color: white !important;
             font-weight: bold;
             border-radius: 5px;
-            border: none;
+            border: none !important;
+            height: 40px !important;
         }}
         
         .stButton > button:hover {{
             background-color: rgba(31, 119, 180, 1) !important;
-            transform: scale(1.02);
-        }}
-        
-        /* Contenedores con fondo semi-transparente */
-        .stContainer {{
-            background-color: rgba(0, 0, 0, 0.3) !important;
-            border-radius: 10px;
-            padding: 15px;
         }}
         
         /* Títulos */
         h1, h2, h3, h4, h5 {{
-            color: white;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
+            color: white !important;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9) !important;
         }}
         
-        /* Divisores */
+        /* Divisores en BLANCO */
         hr {{
-            border-color: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.7) !important;
+            border-width: 1px !important;
+            margin: 15px 0 !important;
         }}
         
         /* Metrics */
@@ -78,6 +101,34 @@ st.markdown(f"""
             background-color: rgba(0, 0, 0, 0.4);
             padding: 15px;
             border-radius: 10px;
+        }}
+        
+        [data-testid="metric-container"] .metric-text {{
+            color: white !important;
+        }}
+        
+        [data-testid="metric-container"] p {{
+            color: white !important;
+        }}
+        
+        [data-testid="metric-label"] {{
+            color: white !important;
+        }}
+        
+        [data-testid="metric-container"] .stMetric {{
+            color: white !important;
+        }}
+        
+        [data-testid="stMetricValue"] {{
+            color: white !important;
+        }}
+        
+        div[data-testid="metric-container"] > div {{
+            color: white !important;
+        }}
+        
+        div[data-testid="metric-container"] span {{
+            color: white !important;
         }}
     </style>
 """, unsafe_allow_html=True)
@@ -98,6 +149,18 @@ st.title("🧮 Nómina Conductores TA")
 col1,col2 = st.columns(2)
 
 with col1:
+    st.markdown("""
+        <style>
+            .unified-container {
+                background-color: rgba(0, 0, 0, 0.15) !important;
+                padding: 15px !important;
+                border-radius: 8px;
+                border: 1px solid rgba(255, 255, 255, 0.15);
+            }
+        </style>
+        <div class="unified-container">
+    """, unsafe_allow_html=True)
+    
     quincena = st.selectbox("Quincena",["15","30"], key="select_quincena")
     if quincena != st.session_state.quincena:
         st.session_state.quincena = quincena
@@ -131,6 +194,8 @@ with col1:
                 st.rerun()
             else:
                 st.error("Código inválido")
+    
+    st.markdown("</div>", unsafe_allow_html=True)
 
 st.divider()
 
