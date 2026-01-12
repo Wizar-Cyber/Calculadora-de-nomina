@@ -1,7 +1,7 @@
 
 # 🧮 Calculadora de Nómina por Turnos
 
-Una aplicación web para calcular la nómina de conductores en Colombia, considerando turnos, recargos, deducciones y beneficios laborales.
+Una aplicación web para calcular la nómina de conductores de TA en Colombia, considerando turnos, recargos, deducciones y beneficios laborales.
 
 ---
 
