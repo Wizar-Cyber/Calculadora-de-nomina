@@ -1,0 +1,860 @@
+
+
+[
+  
+  {
+    "codigo": "250M",
+    "descripcion": "Turno 250M",
+    "hora_inicio": "3:10",
+    "hora_fin": "9:10",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "251M",
+    "descripcion": "Turno 251M",
+    "hora_inicio": "3:20",
+    "hora_fin": "8:55",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "252M",
+    "descripcion": "Turno 252M",
+    "hora_inicio": "3:20",
+    "hora_fin": "9:50",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "253M",
+    "descripcion": "Turno 253M",
+    "hora_inicio": "3:30",
+    "hora_fin": "9:05",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "254M",
+    "descripcion": "Turno 254M",
+    "hora_inicio": "3:40",
+    "hora_fin": "9:15",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "255M",
+    "descripcion": "Turno 255M",
+    "hora_inicio": "3:52",
+    "hora_fin": "9:27",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "256M",
+    "descripcion": "Turno 256M",
+    "hora_inicio": "3:59",
+    "hora_fin": "9:34",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "257M",
+    "descripcion": "Turno 257M",
+    "hora_inicio": "4:06",
+    "hora_fin": "9:41",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "258M",
+    "descripcion": "Turno 258M",
+    "hora_inicio": "4:13",
+    "hora_fin": "10:34",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "259M",
+    "descripcion": "Turno 259M",
+    "hora_inicio": "4:23",
+    "hora_fin": "10:43",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "260M",
+    "descripcion": "Turno 260M",
+    "hora_inicio": "4:31",
+    "hora_fin": "11:00",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "261M",
+    "descripcion": "Turno 261M",
+    "hora_inicio": "5:15",
+    "hora_fin": "11:40",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "262M",
+    "descripcion": "Turno 262M",
+    "hora_inicio": "5:25",
+    "hora_fin": "11:46",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "TADIS",
+    "descripcion": "TADIS",
+    "hora_inicio": "13:00",
+    "hora_fin": "19:00",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "ACTIVID",
+    "descripcion": "ACTIVID",
+    "hora_inicio": "7:00",
+    "hora_fin": "13:30",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "263M",
+    "descripcion": "Turno 263M",
+    "hora_inicio": "8:35",
+    "hora_fin": "14:10",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "264M",
+    "descripcion": "Turno 264M",
+    "hora_inicio": "9:00",
+    "hora_fin": "14:35",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "265M",
+    "descripcion": "Turno 265M",
+    "hora_inicio": "9:50",
+    "hora_fin": "16:20",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "266M",
+    "descripcion": "Turno 266M",
+    "hora_inicio": "10:25",
+    "hora_fin": "16:10",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "267M",
+    "descripcion": "Turno 267M",
+    "hora_inicio": "10:35",
+    "hora_fin": "16:15",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "269M",
+    "descripcion": "Turno 269M",
+    "hora_inicio": "11:05",
+    "hora_fin": "17:40",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "268M",
+    "descripcion": "Turno 268M",
+    "hora_inicio": "11:25",
+    "hora_fin": "18:05",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "271M",
+    "descripcion": "Turno 271M",
+    "hora_inicio": "11:35",
+    "hora_fin": "17:35",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "270M",
+    "descripcion": "Turno 270M",
+    "hora_inicio": "11:43",
+    "hora_fin": "17:30",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "272M",
+    "descripcion": "Turno 272M",
+    "hora_inicio": "13:35",
+    "hora_fin": "19:10",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "274M",
+    "descripcion": "Turno 274M",
+    "hora_inicio": "14:00",
+    "hora_fin": "20:00",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "273M",
+    "descripcion": "Turno 273M",
+    "hora_inicio": "14:00",
+    "hora_fin": "19:45",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "275M",
+    "descripcion": "Turno 275M",
+    "hora_inicio": "14:40",
+    "hora_fin": "20:20",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "276M",
+    "descripcion": "Turno 276M",
+    "hora_inicio": "14:50",
+    "hora_fin": "20:30",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "277M",
+    "descripcion": "Turno 277M",
+    "hora_inicio": "16:04",
+    "hora_fin": "21:39",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "278M",
+    "descripcion": "Turno 278M",
+    "hora_inicio": "16:16",
+    "hora_fin": "21:51",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "279M",
+    "descripcion": "Turno 279M",
+    "hora_inicio": "15:40",
+    "hora_fin": "22:10",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "282M",
+    "descripcion": "Turno 282M",
+    "hora_inicio": "17:25",
+    "hora_fin": "23:10",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "280M",
+    "descripcion": "Turno 280M",
+    "hora_inicio": "17:25",
+    "hora_fin": "23:00",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "281M",
+    "descripcion": "Turno 281M",
+    "hora_inicio": "17:30",
+    "hora_fin": "23:20",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "284M",
+    "descripcion": "Turno 284M",
+    "hora_inicio": "17:55",
+    "hora_fin": "23:40",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "283M",
+    "descripcion": "Turno 283M",
+    "hora_inicio": "17:55",
+    "hora_fin": "23:30",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "285M",
+    "descripcion": "Turno 285M",
+    "hora_inicio": "18:05",
+    "hora_fin": "23:40",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "600TT",
+    "descripcion": "Turno 600TT",
+    "hora_inicio": "03:00",
+    "hora_fin": "09:44",
+    "descanso": [
+      "07:31",
+      "07:52"
+    ],
+    "festivo": false
+  },
+  {
+    "codigo": "601TT",
+    "descripcion": "Turno 601TT",
+    "hora_inicio": "09:38",
+    "hora_fin": "16:14",
+    "descanso": [
+      "13:49",
+      "14:10"
+    ],
+    "festivo": false
+  },
+  {
+    "codigo": "602TT",
+    "descripcion": "Turno 602TT",
+    "hora_inicio": "16:17",
+    "hora_fin": "22:59",
+    "descanso": [
+      "18:54",
+      "19:15"
+    ],
+    "festivo": false
+  },
+  {
+    "codigo": "603TT",
+    "descripcion": "Turno 603TT",
+    "hora_inicio": "03:10",
+    "hora_fin": "08:47",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "604TT",
+    "descripcion": "Turno 604TT",
+    "hora_inicio": "08:51",
+    "hora_fin": "15:20",
+    "descanso": [
+      "10:49",
+      "12:04"
+    ],
+    "festivo": false
+  },
+  {
+    "codigo": "605TT",
+    "descripcion": "Turno 605TT",
+    "hora_inicio": "12:48",
+    "hora_fin": "18:50",
+    "descanso": [
+      "15:26",
+      "15:47"
+    ],
+    "festivo": false
+  },
+  {
+    "codigo": "606TT",
+    "descripcion": "Turno 606TT",
+    "hora_inicio": "17:56",
+    "hora_fin": "23:35",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "607TT",
+    "descripcion": "Turno 607TT",
+    "hora_inicio": "03:20",
+    "hora_fin": "09:57",
+    "descanso": [
+      "06:33",
+      "06:54"
+    ],
+    "festivo": false
+  },
+  {
+    "codigo": "608TT",
+    "descripcion": "Turno 608TT",
+    "hora_inicio": "10:03",
+    "hora_fin": "16:56",
+    "descanso": [
+      "12:15",
+      "12:47"
+    ],
+    "festivo": false
+  },
+  {
+    "codigo": "609TT",
+    "descripcion": "Turno 609TT",
+    "hora_inicio": "16:59",
+    "hora_fin": "23:26",
+    "descanso": [
+      "19:32",
+      "19:53"
+    ],
+    "festivo": false
+  },
+  {
+    "codigo": "610TT",
+    "descripcion": "Turno 610TT",
+    "hora_inicio": "03:30",
+    "hora_fin": "08:16",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "611TT",
+    "descripcion": "Turno 611TT",
+    "hora_inicio": "04:04",
+    "hora_fin": "09:51",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "612TT",
+    "descripcion": "Turno 612TT",
+    "hora_inicio": "10:37",
+    "hora_fin": "16:19",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "613TT",
+    "descripcion": "Turno 613TT",
+    "hora_inicio": "16:22",
+    "hora_fin": "22:59",
+    "descanso": [
+      "20:41",
+      "21:01"
+    ],
+    "festivo": false
+  },
+  {
+    "codigo": "614TT",
+    "descripcion": "Turno 614TT",
+    "hora_inicio": "04:12",
+    "hora_fin": "09:58",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "615TT",
+    "descripcion": "Turno 615TT",
+    "hora_inicio": "09:52",
+    "hora_fin": "15:32",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "616TT",
+    "descripcion": "Turno 616TT",
+    "hora_inicio": "15:35",
+    "hora_fin": "21:23",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "617TT",
+    "descripcion": "Turno 617TT",
+    "hora_inicio": "04:20",
+    "hora_fin": "10:58",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "618TT",
+    "descripcion": "Turno 618TT",
+    "hora_inicio": "10:52",
+    "hora_fin": "17:21",
+    "descanso": [
+      "14:53",
+      "15:14"
+    ],
+    "festivo": false
+  },
+  {
+    "codigo": "619TT",
+    "descripcion": "Turno 619TT",
+    "hora_inicio": "17:25",
+    "hora_fin": "23:08",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "620TT",
+    "descripcion": "Turno 620TT",
+    "hora_inicio": "04:28",
+    "hora_fin": "10:50",
+    "descanso": [
+      "08:16",
+      "08:36"
+    ],
+    "festivo": false
+  },
+  {
+    "codigo": "621TT",
+    "descripcion": "Turno 621TT",
+    "hora_inicio": "07:53",
+    "hora_fin": "13:40",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "622TT",
+    "descripcion": "Turno 622TT",
+    "hora_inicio": "13:38",
+    "hora_fin": "19:08",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "623TT",
+    "descripcion": "Turno 623TT",
+    "hora_inicio": "05:22",
+    "hora_fin": "12:05",
+    "descanso": [
+      "09:54",
+      "10:14"
+    ],
+    "festivo": false
+  },
+  {
+    "codigo": "624TT",
+    "descripcion": "Turno 624TT",
+    "hora_inicio": "11:59",
+    "hora_fin": "18:30",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "625TT",
+    "descripcion": "Turno 625TT",
+    "hora_inicio": "05:28",
+    "hora_fin": "12:11",
+    "descanso": [
+      "09:08",
+      "09:28"
+    ],
+    "festivo": false
+  },
+  {
+    "codigo": "626TT",
+    "descripcion": "Turno 626TT",
+    "hora_inicio": "12:05",
+    "hora_fin": "17:43",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "627TT",
+    "descripcion": "Turno 627TT",
+    "hora_inicio": "17:46",
+    "hora_fin": "23:20",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "628TT",
+    "descripcion": "Turno 628TT",
+    "hora_inicio": "11:20",
+    "hora_fin": "17:26",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "629TT",
+    "descripcion": "Turno 629TT",
+    "hora_inicio": "17:31",
+    "hora_fin": "23:17",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "630TT",
+    "descripcion": "Turno 630TT",
+    "hora_inicio": "11:39",
+    "hora_fin": "16:43",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "631TT",
+    "descripcion": "Turno 631TT",
+    "hora_inicio": "05:34",
+    "hora_fin": "12:18",
+    "descanso": [
+      "09:28",
+      "09:48"
+    ],
+    "festivo": false
+  },
+  {
+    "codigo": "632TT",
+    "descripcion": "Turno 632TT",
+    "hora_inicio": "14:00",
+    "hora_fin": "20:37",
+    "descanso": [
+      "16:44",
+      "17:03"
+    ],
+    "festivo": false
+  },
+  {
+    "codigo": "633TT",
+    "descripcion": "Turno 633TT",
+    "hora_inicio": "03:20",
+    "hora_fin": "09:50",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "634TT",
+    "descripcion": "Turno 634TT",
+    "hora_inicio": "09:50",
+    "hora_fin": "16:20",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "635TT",
+    "descripcion": "Turno 635TT",
+    "hora_inicio": "16:20",
+    "hora_fin": "22:50",
+    "descanso": [],
+    "festivo": false
+  },
+  {
+    "codigo": "150CC",
+    "descripcion": "Turno 150CC",
+    "hora_inicio": "03:58",
+    "hora_fin": "09:30",
+    "descanso": [],
+    "festivo": true
+  },
+  {
+    "codigo": "151CC",
+    "descripcion": "Turno 151CC",
+    "hora_inicio": "03:50",
+    "hora_fin": "09:17",
+    "descanso": [],
+    "festivo": true
+  },
+  {
+    "codigo": "152CC",
+    "descripcion": "Turno 152CC",
+    "hora_inicio": "09:18",
+    "hora_fin": "16:00",
+    "descanso": [],
+    "festivo": true
+  },
+  {
+    "codigo": "153CC",
+    "descripcion": "Turno 153CC",
+    "hora_inicio": "16:02",
+    "hora_fin": "22:29",
+    "descanso": [],
+    "festivo": true
+  },
+  {
+    "codigo": "154CC",
+    "descripcion": "Turno 154CC",
+    "hora_inicio": "04:12",
+    "hora_fin": "09:40",
+    "descanso": [],
+    "festivo": true
+  },
+  {
+    "codigo": "155CC",
+    "descripcion": "Turno 155CC",
+    "hora_inicio": "09:36",
+    "hora_fin": "15:51",
+    "descanso": [],
+    "festivo": true
+  },
+  {
+    "codigo": "156CC",
+    "descripcion": "Turno 156CC",
+    "hora_inicio": "15:53",
+    "hora_fin": "22:19",
+    "descanso": [],
+    "festivo": true
+  },
+  {
+    "codigo": "157CC",
+    "descripcion": "Turno 157CC",
+    "hora_inicio": "03:35",
+    "hora_fin": "09:10",
+    "descanso": [],
+    "festivo": true
+  },
+  {
+    "codigo": "158CC",
+    "descripcion": "Turno 158CC",
+    "hora_inicio": "10:41",
+    "hora_fin": "16:05",
+    "descanso": [],
+    "festivo": true
+  },
+  {
+    "codigo": "159CC",
+    "descripcion": "Turno 159CC",
+    "hora_inicio": "16:10",
+    "hora_fin": "22:43",
+    "descanso": [],
+    "festivo": true
+  },
+  {
+    "codigo": "160CC",
+    "descripcion": "Turno 160CC",
+    "hora_inicio": "04:30",
+    "hora_fin": "09:33",
+    "descanso": [],
+    "festivo": true
+  },
+  {
+    "codigo": "161CC",
+    "descripcion": "Turno 161CC",
+    "hora_inicio": "09:35",
+    "hora_fin": "14:36",
+    "descanso": [],
+    "festivo": true
+  },
+  {
+    "codigo": "162CC",
+    "descripcion": "Turno 162CC",
+    "hora_inicio": "14:38",
+    "hora_fin": "20:29",
+    "descanso": [],
+    "festivo": true
+  },
+  {
+    "codigo": "163CC",
+    "descripcion": "Turno 163CC",
+    "hora_inicio": "04:38",
+    "hora_fin": "09:42",
+    "descanso": [],
+    "festivo": true
+  },
+  {
+    "codigo": "164CC",
+    "descripcion": "Turno 164CC",
+    "hora_inicio": "09:44",
+    "hora_fin": "16:04",
+    "descanso": [],
+    "festivo": true
+  },
+  {
+    "codigo": "165CC",
+    "descripcion": "Turno 165CC",
+    "hora_inicio": "15:57",
+    "hora_fin": "22:34",
+    "descanso": [],
+    "festivo": true
+  },
+  {
+    "codigo": "166CC",
+    "descripcion": "Turno 166CC",
+    "hora_inicio": "05:36",
+    "hora_fin": "10:41",
+    "descanso": [],
+    "festivo": true
+  },
+  {
+    "codigo": "167CC",
+    "descripcion": "Turno 167CC",
+    "hora_inicio": "10:42",
+    "hora_fin": "17:24",
+    "descanso": [],
+    "festivo": true
+  },
+  {
+    "codigo": "168CC",
+    "descripcion": "Turno 168CC",
+    "hora_inicio": "17:26",
+    "hora_fin": "22:49",
+    "descanso": [],
+    "festivo": true
+  },
+  {
+    "codigo": "169CC",
+    "descripcion": "Turno 169CC",
+    "hora_inicio": "09:22",
+    "hora_fin": "14:46",
+    "descanso": [],
+    "festivo": true
+  },
+  {
+    "codigo": "170CC",
+    "descripcion": "Turno 170CC",
+    "hora_inicio": "16:39",
+    "hora_fin": "21:35",
+    "descanso": [],
+    "festivo": true
+  },
+  {
+    "codigo": "171CC",
+    "descripcion": "Turno 171CC",
+    "hora_inicio": "09:00",
+    "hora_fin": "13:10",
+    "descanso": [],
+    "festivo": true
+  },
+  {
+    "codigo": "172CC",
+    "descripcion": "Turno 172CC",
+    "hora_inicio": "13:00",
+    "hora_fin": "18:00",
+    "descanso": [],
+    "festivo": true
+  },
+  {
+    "codigo": "173CC",
+    "descripcion": "Turno 173CC",
+    "hora_inicio": "17:50",
+    "hora_fin": "22:50",
+    "descanso": [],
+    "festivo": true
+  },
+  {
+    "codigo": "174CC",
+    "descripcion": "Turno 174CC",
+    "hora_inicio": "03:35",
+    "hora_fin": "10:05",
+    "descanso": [],
+    "festivo": true
+  },
+  {
+    "codigo": "175CC",
+    "descripcion": "Turno 175CC",
+    "hora_inicio": "10:05",
+    "hora_fin": "16:15",
+    "descanso": [],
+    "festivo": true
+  },
+  {
+    "codigo": "176CC",
+    "descripcion": "Turno 176CC",
+    "hora_inicio": "16:15",
+    "hora_fin": "22:30",
+    "descanso": [],
+    "festivo": true
+  }
+
+
+]
