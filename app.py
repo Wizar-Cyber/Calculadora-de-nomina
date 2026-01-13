@@ -559,6 +559,7 @@ auxilio = st.session_state.calc.total_auxilio()
 civicas = st.session_state.calc.total_civicas()
 ded = st.session_state.calc.total_deducciones()
 neto = dev + auxilio + civicas - ded
+total_ingresos = dev + auxilio + civicas
 
 # Mostrar en formato tipo colilla
 st.subheader("📋 NÓMINA")
@@ -603,8 +604,8 @@ with col_dev:
     # Auxilio (solo quincena 30)
     if st.session_state.quincena == "30":
         st.write(f"AUXILIO TRANSPORTE: - | ${auxilio:,.0f}")
-    
-    st.write(f"\n**TOTAL DEVENGADO: ${dev:,.0f}**")
+
+    st.write(f"\n**TOTAL DEVENGADO: ${total_ingresos:,.0f}**")
 
 with col_dedu:
     st.write("**DEDUCCIONES**")
