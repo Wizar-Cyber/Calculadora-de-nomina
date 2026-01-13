@@ -266,6 +266,7 @@ if "calc" not in st.session_state:
     st.session_state.quincena = "30"
     st.session_state.calc = CalculadoraNomina(quincena="30")
     st.session_state.turnos_reg = []
+    st.session_state.deducciones_reg = []
     st.session_state.expandir_dispo = False
     st.session_state.expandir_extras = False
     st.session_state.expandir_deduccion = False
@@ -299,6 +300,9 @@ def _recalcular_por_quincena():
             st.session_state.calc.agregar_incapacidad()
         elif codigo_tmp == "DISPO":
             pass
+
+    for nombre, valor in st.session_state.deducciones_reg:
+        st.session_state.calc.agregar_deduccion_manual(nombre, valor)
 
     st.rerun()
 
@@ -375,6 +379,9 @@ if st.session_state.turnos_reg:
                     st.session_state.calc.agregar_incapacidad()
                 elif codigo == "DISPO":
                     pass
+
+            for nombre, valor in st.session_state.deducciones_reg:
+                st.session_state.calc.agregar_deduccion_manual(nombre, valor)
             st.rerun()
 else:
     st.write("(Sin registros)")
@@ -483,6 +490,29 @@ if st.session_state.expandir_extras:
 
 if st.session_state.expandir_deduccion:
     st.markdown('<div id="form-deduccion"></div>', unsafe_allow_html=True)
+    with st.container(border=True):
+        st.write("**Deducción**")
+        nombre = st.text_input("Concepto", key="deduccion_nombre")
+        valor = st.number_input("Valor", min_value=0.0, step=1000.0, format="%.0f", key="deduccion_valor")
+
+        col1_ded, col2_ded = st.columns(2)
+        with col1_ded:
+            if st.button("Agregar Deducción", use_container_width=True, key="btn_agregar_deduccion"):
+                nombre_norm = (nombre or "").strip()
+                if not nombre_norm:
+                    st.error("Ingresa el concepto de la deducción")
+                else:
+                    st.session_state.calc.agregar_deduccion_manual(nombre_norm, float(valor))
+                    st.session_state.deducciones_reg.append((nombre_norm, float(valor)))
+                    st.session_state.expandir_deduccion = False
+                    st.session_state._scroll_to = None
+                    st.rerun()
+
+        with col2_ded:
+            if st.button("Cancelar", use_container_width=True, key="btn_cancelar_deduccion"):
+                st.session_state.expandir_deduccion = False
+                st.session_state._scroll_to = None
+                st.rerun()
 
 # Scroll automático: en móvil evita que el usuario tenga que bajar buscando el formulario.
 if _scroll_to == "dispo":
@@ -519,6 +549,7 @@ with col_reset:
     if st.button("🔄", use_container_width=True):
         st.session_state.calc = CalculadoraNomina()
         st.session_state.turnos_reg = []
+        st.session_state.deducciones_reg = []
         st.rerun()
 
 st.divider()
