@@ -22,6 +22,7 @@ class CalculadoraNomina:
         # Estado principal de la quincena
         self.devengado = SALARIO_QUINCENA
         self.quincena = quincena
+        self.valor_dia_basico = SALARIO_QUINCENA / 15
         self.detalles_turnos = []  # Solo para cálculos intermedios
         self.detalles_desglose = []  # Para mostrar en el desglose
         self.deducciones_manuales = []
@@ -208,23 +209,21 @@ class CalculadoraNomina:
         # Incapacidad: reduce días trabajados y paga al 66.67%.
         self.dias_incapacidad += 1
         self.dias_trabajados -= 1
-        valor = HORAS_JORNADA * VALOR_HORA * 0.6667
-        self.devengado += valor
+        # Ya existe el día completo dentro del básico; solo se descuenta el 33.33%.
+        self.devengado -= self.valor_dia_basico * (1 - 0.6667)
 
     def agregar_suspension(self):
         """Agrega suspensión: descuenta una jornada del básico y ajusta días trabajados."""
         # Suspensión: descuenta un día del básico.
         # Restar 6 horas (1 día) del básico
-        valor = HORAS_JORNADA * VALOR_HORA
-        self.devengado -= valor
+        self.devengado -= self.valor_dia_basico
         self.dias_trabajados -= 1
 
     def agregar_licencia(self):
         """Agrega licencia no remunerada: descuenta una jornada del básico."""
         # Licencia: descuenta un día del básico.
         # Restar 6 horas (1 día) del básico
-        valor = HORAS_JORNADA * VALOR_HORA
-        self.devengado -= valor
+        self.devengado -= self.valor_dia_basico
         self.dias_trabajados -= 1
 
     # ----------------------------

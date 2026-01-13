@@ -567,8 +567,14 @@ col_dev, col_dedu = st.columns(2)
 
 with col_dev:
     st.write("**DEVENGADOS**")
-    st.write(f"SALARIO BÁSICO: ${SALARIO_QUINCENA:,.0f} | 15 días")
-    
+    dias_incap = st.session_state.calc.dias_incapacidad
+    dias_full = st.session_state.calc.dias_trabajados
+    dias_no_trab = max(0, 15 - dias_full - dias_incap)
+    valor_dia = st.session_state.calc.valor_dia_basico
+
+    val_full = dias_full * valor_dia
+    st.write(f"SALARIO BÁSICO: ${val_full:,.0f} | {dias_full} días")
+
     # Mostrar recargos agrupados
     for concepto, datos in st.session_state.calc.recargos_agrupados.items():
         horas = datos["horas"]
@@ -582,13 +588,13 @@ with col_dev:
         else:
             st.write(f"{concepto}: {cantidad:.2f}h | ${valor:,.0f}")
     
-    # Días de incapacidad
-    if st.session_state.calc.dias_incapacidad > 0:
-        dias_norm = 15 - st.session_state.calc.dias_incapacidad
-        val_normal = dias_norm * HORAS_JORNADA * VALOR_HORA
-        val_incap = st.session_state.calc.dias_incapacidad * HORAS_JORNADA * VALOR_HORA * 0.6667
-        st.write(f"DÍAS NORMALES: {dias_norm} | ${val_normal:,.0f}")
-        st.write(f"INCAPACIDAD: {st.session_state.calc.dias_incapacidad} @ 66.67% | ${val_incap:,.0f}")
+    # Días no laborados / incapacidad (ajustan el básico)
+    if dias_no_trab > 0:
+        st.write(f"LIC/SUSP: {dias_no_trab} día(s) sin pago")
+
+    if dias_incap > 0:
+        val_incap = dias_incap * valor_dia * 0.6667
+        st.write(f"INCAPACIDAD: {dias_incap} @ 66.67% | ${val_incap:,.0f}")
     
     # Cívicas
     if civicas > 0:
