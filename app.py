@@ -1,11 +1,14 @@
 import streamlit as st
 import json
+import pandas as pd
 from models.turno import Turno
 from services.calculadora import CalculadoraNomina
 from config import SALARIO_QUINCENA, VALOR_HORA, HORAS_JORNADA
+import streamlit.components.v1 as components
 
 st.set_page_config(layout="wide")
 
+# UI: fondo y estilos globales (colores, botones, responsive)
 # Cargar imagen en base64
 import os
 fondo_path = os.path.join(os.path.dirname(__file__), "fondo_base64.txt")
@@ -31,6 +34,15 @@ st.markdown(f"""
         label {{
             color: white !important;
             font-weight: 600;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
+        }}
+
+        /* Texto de widgets (checkbox/radio) en blanco */
+        div[data-testid="stCheckbox"] span,
+        div[data-testid="stRadio"] span,
+        div[data-testid="stRadio"] p,
+        div[data-testid="stCheckbox"] p {{
+            color: white !important;
             text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.7);
         }}
         
@@ -78,6 +90,9 @@ st.markdown(f"""
             border: none !important;
             height: 40px !important;
             font-size: 14px !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
         }}
         
         .stButton > button:hover {{
@@ -122,12 +137,32 @@ st.markdown(f"""
         [data-testid="metric-label"] {{
             color: white !important;
         }}
-        
-        [data-testid="metric-container"] .stMetric {{
+
+        [data-testid="metric-container"] [data-testid="stMetricValue"] {{
+            color: white !important;
+        }}
+
+        [data-testid="metric-container"] [data-testid="stMetricValue"] * {{
+            color: white !important;
+        }}
+
+        [data-testid="metric-container"] [data-testid="stMetricValue"] > div {{
+            color: white !important;
+        }}
+
+        [data-testid="metric-container"] [data-testid="stMetricValue"] > div * {{
+            color: white !important;
+        }}
+
+        [data-testid="metric-container"] [data-testid="stMetricValue"] [data-component-name="<div />"] {{
+            color: white !important;
+        }}
+
+        [data-testid="metric-container"] [data-component-name="<div />"] {{
             color: white !important;
         }}
         
-        [data-testid="stMetricValue"] {{
+        [data-testid="metric-container"] .stMetric {{
             color: white !important;
         }}
         
@@ -137,6 +172,39 @@ st.markdown(f"""
         
         div[data-testid="metric-container"] span {{
             color: white !important;
+        }}
+
+        div[data-testid="stDataFrame"] {{
+            background: transparent !important;
+        }}
+
+        div[data-testid="stDataFrame"] * {{
+            background: transparent !important;
+        }}
+
+        div[data-testid="stDataEditor"] {{
+            background: transparent !important;
+        }}
+
+        div[data-testid="stDataEditor"] * {{
+            background: transparent !important;
+        }}
+
+        /* Data editor/grid: dejar celdas y header transparentes pero texto legible */
+        div[data-testid="stDataFrame"] [role="grid"],
+        div[data-testid="stDataEditor"] [role="grid"],
+        div[data-testid="stDataFrame"] [role="grid"] * ,
+        div[data-testid="stDataEditor"] [role="grid"] * {{
+            background-color: transparent !important;
+        }}
+
+        div[data-testid="stDataFrame"] [role="columnheader"],
+        div[data-testid="stDataEditor"] [role="columnheader"],
+        div[data-testid="stDataFrame"] [role="gridcell"],
+        div[data-testid="stDataEditor"] [role="gridcell"] {{
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
+            border-color: rgba(255, 255, 255, 0.25) !important;
         }}
         
         /* Responsive para móvil */
@@ -159,30 +227,40 @@ st.markdown(f"""
                 font-size: 12px !important;
                 height: 36px !important;
                 padding: 6px 10px !important;
+                white-space: normal !important;
+                overflow: visible !important;
+                text-overflow: clip !important;
             }}
             
             label {{
                 font-size: 0.95rem !important;
             }}
-            
-            /* Botones de turnos en móvil */
-            .stColumn:last-child .stButton > button {{
-                padding: 4px 8px !important;
-                height: 32px !important;
-                font-size: 14px !important;
+
+            /* En móvil permitir que las columnas se apilen normalmente */
+            div[data-testid="stHorizontalBlock"] {{
+                flex-wrap: wrap !important;
+                overflow-x: hidden !important;
             }}
-        }}
-        
-        /* Layout para web - botón alineado */
-        @media (min-width: 641px) {{
-            .stColumn:last-child {{
-                display: flex;
-                align-items: center;
-                justify-content: center;
+
+            /* Registros: en móvil mantener una sola fila con scroll horizontal */
+            .registros div[data-testid="stHorizontalBlock"] {{
+                flex-wrap: nowrap !important;
+                overflow-x: auto !important;
+                gap: 8px !important;
+            }}
+
+            .registros div[data-testid="column"] {{
+                flex: 0 0 auto !important;
             }}
         }}
     </style>
 """, unsafe_allow_html=True)
+
+@st.cache_data(ttl=3600)
+def _cargar_turnos_base():
+    with open("turnos.json", encoding="utf-8") as f:
+        data = json.load(f)
+    return {t["codigo"]: Turno(t) for t in data}
 
 if "calc" not in st.session_state:
     st.session_state.quincena = "30"
@@ -192,78 +270,97 @@ if "calc" not in st.session_state:
     st.session_state.expandir_extras = False
     st.session_state.expandir_deduccion = False
 
-with open("turnos.json") as f:
-    turnos_base = {t["codigo"]:Turno(t) for t in json.load(f)}
+turnos_base = _cargar_turnos_base()
+
+
+# Recalcula la nómina cuando cambia la quincena:
+# reinicia la calculadora, mantiene los registros y re-agrega cada ítem.
+def _recalcular_por_quincena():
+    quincena = st.session_state.select_quincena
+    if quincena == st.session_state.quincena:
+        return
+
+    st.session_state.quincena = quincena
+    turnos_temp = st.session_state.turnos_reg.copy()
+    st.session_state.calc = CalculadoraNomina(quincena=quincena)
+    st.session_state.turnos_reg = turnos_temp
+
+    for codigo_tmp, _, _ in turnos_temp:
+        if codigo_tmp in turnos_base:
+            t = turnos_base[codigo_tmp]
+            st.session_state.calc.agregar_turno(t)
+        elif codigo_tmp == "SUSP":
+            st.session_state.calc.agregar_suspension()
+        elif codigo_tmp == "LIC":
+            st.session_state.calc.agregar_licencia()
+        elif codigo_tmp == "CP":
+            st.session_state.calc.agregar_cp()
+        elif codigo_tmp == "INCAP":
+            st.session_state.calc.agregar_incapacidad()
+        elif codigo_tmp == "DISPO":
+            pass
+
+    st.rerun()
+
+
+# Limpia el mensaje de error de turno al modificar el input.
+def _limpiar_error_turno():
+    st.session_state.turno_error = ""
 
 st.title("🧮 Nómina Conductores TA")
 
 col1,col2 = st.columns(2)
 
 with col1:
-    st.markdown("""
-        <style>
-            .unified-container {
-                background-color: rgba(0, 0, 0, 0.15) !important;
-                padding: 15px !important;
-                border-radius: 8px;
-                border: 1px solid rgba(255, 255, 255, 0.15);
-            }
-        </style>
-        <div class="unified-container">
-    """, unsafe_allow_html=True)
-    
-    quincena = st.selectbox("Quincena",["15","30"], key="select_quincena")
-    if quincena != st.session_state.quincena:
-        st.session_state.quincena = quincena
-        # Guardar los turnos actuales
-        turnos_temp = st.session_state.turnos_reg.copy()
-        # Reinicializar con la nueva quincena
-        st.session_state.calc = CalculadoraNomina(quincena=quincena)
-        st.session_state.turnos_reg = turnos_temp
-        # Re-agregar todos los turnos
-        for codigo, _, _ in turnos_temp:
-            if codigo in turnos_base:
-                t = turnos_base[codigo]
+    if "turno_error" not in st.session_state:
+        st.session_state.turno_error = ""
+
+    with st.container(border=True):
+        st.selectbox(
+            "Quincena",
+            ["15", "30"],
+            key="select_quincena",
+            on_change=_recalcular_por_quincena,
+        )
+
+        codigo = st.text_input("Código Turno", key="codigo_turno", on_change=_limpiar_error_turno)
+
+        if st.button("Agregar Turno", use_container_width=True):
+            codigo_norm = (codigo or "").strip().upper()
+            if codigo_norm in turnos_base:
+                st.session_state.turno_error = ""
+                t = turnos_base[codigo_norm]
                 st.session_state.calc.agregar_turno(t)
-            elif codigo == "SUSP":
-                st.session_state.calc.agregar_suspension()
-            elif codigo == "LIC":
-                st.session_state.calc.agregar_licencia()
-            elif codigo == "CP":
-                st.session_state.calc.agregar_cp()
-            elif codigo == "INCAP":
-                st.session_state.calc.agregar_incapacidad()
-        st.rerun()
-    
-    with st.form("form_turno", clear_on_submit=True):
-        codigo = st.text_input("Código Turno")
-        if st.form_submit_button("Agregar Turno"):
-            if codigo in turnos_base:
-                t = turnos_base[codigo]
-                st.session_state.calc.agregar_turno(t)
-                st.session_state.turnos_reg.append((codigo,t.inicio,t.fin))
+                st.session_state.turnos_reg.append((codigo_norm, t.inicio, t.fin))
                 st.rerun()
             else:
-                st.error("Código inválido")
-    
-    st.markdown("</div>", unsafe_allow_html=True)
+                st.session_state.turno_error = "Código inválido"
+
+        if st.session_state.turno_error:
+            st.error(st.session_state.turno_error)
 
 st.divider()
 
 st.subheader("📋 Registros agregados")
-for i,r in enumerate(st.session_state.turnos_reg):
-    # Layout responsive para turnos
-    col_content, col_btn = st.columns([19, 1])
-    
-    with col_content:
-        st.write(f"**{r[0]}** • {r[1]} → {r[2]}")
-    
-    with col_btn:
-        if st.button("❌", key=f"btn_{i}"):
-            st.session_state.turnos_reg.pop(i)
-            # Recalcular todo desde cero
+if st.session_state.turnos_reg:
+    df_reg = pd.DataFrame(st.session_state.turnos_reg, columns=["Código", "Ingreso", "Salida"])
+    df_reg.insert(0, "X", False)
+
+    edited = st.data_editor(
+        df_reg,
+        use_container_width=True,
+        hide_index=True,
+        disabled=["Código", "Ingreso", "Salida"],
+        key="reg_editor",
+    )
+
+    if st.button("Eliminar seleccionados", key="btn_eliminar_registros", use_container_width=True):
+        idxs = [i for i, v in enumerate(edited["X"].tolist()) if bool(v)]
+        if idxs:
+            for i in sorted(idxs, reverse=True):
+                st.session_state.turnos_reg.pop(i)
+
             st.session_state.calc.reinicializar(st.session_state.quincena)
-            # Re-agregar los turnos que quedan
             for codigo, _, _ in st.session_state.turnos_reg:
                 if codigo in turnos_base:
                     t = turnos_base[codigo]
@@ -277,31 +374,128 @@ for i,r in enumerate(st.session_state.turnos_reg):
                 elif codigo == "INCAP":
                     st.session_state.calc.agregar_incapacidad()
                 elif codigo == "DISPO":
-                    pass  # Los DISPO se re-agregan con el código original
+                    pass
             st.rerun()
+else:
+    st.write("(Sin registros)")
 
 st.divider()
 
-# Botones en fila para DISPO, EXTRAS, DEDUCCIÓN
-col_dispo, col_extras, col_deduccion, col_susp, col_lic, col_cp, col_incap, col_reset = st.columns(8)
+# UI: Botonera de acciones principales.
+# Los formularios (DISPO/EXTRAS/DEDUCCIÓN) se renderizan inmediatamente debajo
+# de esta primera fila para que no se vayan al final (y en móvil se hace scroll).
+col_dispo, col_extras, col_deduccion, col_susp = st.columns(4)
 
 with col_dispo:
     if st.button("DISPO", use_container_width=True):
         st.session_state.expandir_dispo = not st.session_state.expandir_dispo
+        if st.session_state.expandir_dispo:
+            st.session_state.expandir_extras = False
+            st.session_state.expandir_deduccion = False
+            st.session_state._scroll_to = "dispo"
 
 with col_extras:
     if st.button("EXTRAS", use_container_width=True):
         st.session_state.expandir_extras = not st.session_state.expandir_extras
+        if st.session_state.expandir_extras:
+            st.session_state.expandir_dispo = False
+            st.session_state.expandir_deduccion = False
+            st.session_state._scroll_to = "extras"
 
 with col_deduccion:
     if st.button("DEDUCCIÓN", use_container_width=True):
         st.session_state.expandir_deduccion = not st.session_state.expandir_deduccion
+        if st.session_state.expandir_deduccion:
+            st.session_state.expandir_dispo = False
+            st.session_state.expandir_extras = False
+            st.session_state._scroll_to = "deduccion"
 
 with col_susp:
     if st.button("SUSPENSIÓN", use_container_width=True):
         st.session_state.calc.agregar_suspension()
         st.session_state.turnos_reg.append(("SUSP","-","-"))
         st.rerun()
+
+# Formularios inmediatamente debajo de la primera fila de botones.
+# Se usa _scroll_to para hacer scroll automático al abrir un formulario.
+_scroll_to = st.session_state.get("_scroll_to")
+
+if st.session_state.expandir_dispo:
+    st.markdown('<div id="form-dispo"></div>', unsafe_allow_html=True)
+    with st.container(border=True):
+        st.write("**Disponible**")
+        col_inicio, col_fin = st.columns(2)
+
+        with col_inicio:
+            inicio = st.time_input("Hora inicio", key="dispo_inicio")
+
+        with col_fin:
+            fin = st.time_input("Hora fin", key="dispo_fin")
+
+        fest = st.checkbox("Festivo/Dominical", key="festivo_dispo")
+        col1_dispo, col2_dispo = st.columns(2)
+
+        with col1_dispo:
+            if st.button("Agregar Dispo", use_container_width=True, key="btn_agregar_dispo"):
+                h_init = str(inicio)[:5]
+                h_fin = str(fin)[:5]
+                st.session_state.calc.agregar_dispo(h_init, h_fin, fest)
+                st.session_state.turnos_reg.append(("DISPO", h_init, h_fin))
+                st.session_state.expandir_dispo = False
+                st.session_state._scroll_to = None
+                st.rerun()
+
+        with col2_dispo:
+            if st.button("Cancelar", use_container_width=True, key="btn_cancelar_dispo"):
+                st.session_state.expandir_dispo = False
+                st.session_state._scroll_to = None
+                st.rerun()
+
+if st.session_state.expandir_extras:
+    st.markdown('<div id="form-extras"></div>', unsafe_allow_html=True)
+    with st.container(border=True):
+        st.write("**Horas Extra**")
+        minutos = st.number_input("Minutos", 0, 500, 0, key="minutos_extra")
+        tipo = st.selectbox("Tipo", [
+            "Extra Diurna (+25%)",
+            "Extra Nocturna (+75%)",
+            "Extra Diurna Festivo (+105%)",
+            "Extra Nocturna Festivo (+155%)"
+        ], key="tipo_extra")
+        col1_extra, col2_extra = st.columns(2)
+
+        with col1_extra:
+            if st.button("Agregar Extra", use_container_width=True, key="btn_agregar_extra"):
+                rec = {"Extra Diurna (+25%)": 1.25,
+                       "Extra Nocturna (+75%)": 1.75,
+                       "Extra Diurna Festivo (+105%)": 2.05,
+                       "Extra Nocturna Festivo (+155%)": 2.55}
+                st.session_state.calc.agregar_extra(minutos, rec[tipo], tipo)
+                st.session_state.expandir_extras = False
+                st.session_state._scroll_to = None
+                st.rerun()
+
+        with col2_extra:
+            if st.button("Cancelar", use_container_width=True, key="btn_cancelar_extra"):
+                st.session_state.expandir_extras = False
+                st.session_state._scroll_to = None
+                st.rerun()
+
+if st.session_state.expandir_deduccion:
+    st.markdown('<div id="form-deduccion"></div>', unsafe_allow_html=True)
+
+# Scroll automático: en móvil evita que el usuario tenga que bajar buscando el formulario.
+if _scroll_to == "dispo":
+    components.html("""<script>document.getElementById('form-dispo')?.scrollIntoView({behavior:'smooth',block:'start'});</script>""", height=0)
+    st.session_state._scroll_to = None
+elif _scroll_to == "extras":
+    components.html("""<script>document.getElementById('form-extras')?.scrollIntoView({behavior:'smooth',block:'start'});</script>""", height=0)
+    st.session_state._scroll_to = None
+elif _scroll_to == "deduccion":
+    components.html("""<script>document.getElementById('form-deduccion')?.scrollIntoView({behavior:'smooth',block:'start'});</script>""", height=0)
+    st.session_state._scroll_to = None
+
+col_lic, col_cp, col_incap, col_reset = st.columns(4)
 
 with col_lic:
     if st.button("LICENCIA", use_container_width=True):
@@ -326,81 +520,6 @@ with col_reset:
         st.session_state.calc = CalculadoraNomina()
         st.session_state.turnos_reg = []
         st.rerun()
-
-# Expandibles
-if st.session_state.expandir_dispo:
-    st.write("**Disponible**")
-    col_hora_sugerida, col_entrada_manual = st.columns(2)
-    
-    with col_hora_sugerida:
-        st.write("Selecciona de sugeridas:")
-        inicio = st.time_input("Hora inicio (sugerida)", key="dispo_inicio_sug")
-        fin = st.time_input("Hora fin (sugerida)", key="dispo_fin_sug")
-    
-    with col_entrada_manual:
-        st.write("O ingresa manual:")
-        inicio_manual = st.text_input("Hora inicio (HH:MM)", key="dispo_inicio_man")
-        fin_manual = st.text_input("Hora fin (HH:MM)", key="dispo_fin_man")
-    
-    fest = st.checkbox("Festivo/Dominical")
-    col1_dispo, col2_dispo = st.columns(2)
-    
-    with col1_dispo:
-        if st.button("Agregar Dispo", use_container_width=True):
-            h_init = inicio_manual if inicio_manual else str(inicio)[:5]
-            h_fin = fin_manual if fin_manual else str(fin)[:5]
-            st.session_state.calc.agregar_dispo(h_init, h_fin, fest)
-            st.session_state.turnos_reg.append(("DISPO", h_init, h_fin))
-            st.session_state.expandir_dispo = False
-            st.rerun()
-    
-    with col2_dispo:
-        if st.button("Cancelar", use_container_width=True):
-            st.session_state.expandir_dispo = False
-            st.rerun()
-
-if st.session_state.expandir_extras:
-    st.write("**Horas Extra**")
-    minutos = st.number_input("Minutos", 0, 500, 0, key="minutos_extra")
-    tipo = st.selectbox("Tipo", [
-        "Extra Diurna (+25%)",
-        "Extra Nocturna (+75%)",
-        "Extra Diurna Festivo (+105%)",
-        "Extra Nocturna Festivo (+155%)"
-    ], key="tipo_extra")
-    col1_extra, col2_extra = st.columns(2)
-    
-    with col1_extra:
-        if st.button("Agregar Extra", use_container_width=True):
-            rec = {"Extra Diurna (+25%)": 1.25,
-                   "Extra Nocturna (+75%)": 1.75,
-                   "Extra Diurna Festivo (+105%)": 2.05,
-                   "Extra Nocturna Festivo (+155%)": 2.55}
-            st.session_state.calc.agregar_extra(minutos, rec[tipo], tipo)
-            st.session_state.expandir_extras = False
-            st.rerun()
-    
-    with col2_extra:
-        if st.button("Cancelar", use_container_width=True):
-            st.session_state.expandir_extras = False
-            st.rerun()
-
-if st.session_state.expandir_deduccion:
-    st.write("**Deducción Manual**")
-    nom = st.text_input("Concepto", key="concepto_ded")
-    val = st.number_input("Valor", 0, 500000, 0, key="valor_ded")
-    col1_ded, col2_ded = st.columns(2)
-    
-    with col1_ded:
-        if st.button("Agregar Deducción", use_container_width=True):
-            st.session_state.calc.agregar_deduccion_manual(nom, val)
-            st.session_state.expandir_deduccion = False
-            st.rerun()
-    
-    with col2_ded:
-        if st.button("Cancelar", use_container_width=True):
-            st.session_state.expandir_deduccion = False
-            st.rerun()
 
 st.divider()
 
@@ -460,19 +579,53 @@ with col_dedu:
     st.write(f"\n**TOTAL DEDUCCIONES: ${ded:,.0f}**")
 
 st.divider()
-st.metric("NETO A PAGAR", f"${neto:,.0f}")
+st.markdown(
+    f"""
+    <div style="background-color: rgba(0, 0, 0, 0.4); padding: 15px; border-radius: 10px;">
+        <div style="color: rgba(255,255,255,0.85); font-size: 0.9rem; font-weight: 600;">NETO A PAGAR</div>
+        <div style="color: #ffffff; font-size: 2rem; font-weight: 800; line-height: 1.1;">${neto:,.0f}</div>
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
 
 # Footer con marca de agua
 st.markdown("""
     <style>
+        /* Forzar valor de métricas a blanco (CSS inyectado al final para ganar prioridad) */
+        .stApp [data-testid="metric-container"],
+        .stApp [data-testid="metric-container"] * {
+            color: #ffffff !important;
+            -webkit-text-fill-color: #ffffff !important;
+            opacity: 1 !important;
+            filter: none !important;
+        }
+
+        /* Evitar solapamiento con elementos fijos de Streamlit Community Cloud */
+        footer { visibility: hidden; }
+
         .footer {
             position: fixed;
-            bottom: 10px;
+            bottom: 70px;
             right: 20px;
             font-size: 12px;
             font-style: italic;
             color: rgba(255, 255, 255, 0.5);
-            z-index: 999;
+            z-index: 999999;
+            pointer-events: none;
+        }
+
+        /* Responsive: ajustar footer y métricas en pantallas pequeñas */
+        @media (max-width: 640px) {
+            .footer {
+                bottom: 110px;
+                right: 12px;
+                font-size: 11px;
+            }
+
+            .stApp [data-testid="metric-container"] {
+                padding: 12px;
+            }
         }
     </style>
     <div class="footer">

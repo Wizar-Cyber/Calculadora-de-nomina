@@ -3,7 +3,23 @@ from config import *
 
 class CalculadoraNomina:
 
+    """Motor de cálculo de nómina por quincena.
+
+    Responsabilidades:
+    - Acumular devengado (salario base + recargos + extras + eventos)
+    - Calcular deducciones base (salud/pensión) y manuales
+    - Calcular cívicas y auxilio según reglas de negocio
+
+    Nota: los turnos pueden cruzar medianoche; los cálculos contemplan ese caso.
+    """
+
+    # Calculadora principal:
+    # - Acumula devengado (salario + recargos + extras)
+    # - Lleva deducciones manuales y cálculo de deducciones base
+    # - Calcula cívicas y auxilio según reglas de la quincena
+
     def __init__(self, quincena="30"):
+        # Estado principal de la quincena
         self.devengado = SALARIO_QUINCENA
         self.quincena = quincena
         self.detalles_turnos = []  # Solo para cálculos intermedios
@@ -21,7 +37,9 @@ class CalculadoraNomina:
         if quincena is None:
             quincena = self.quincena
         self.__init__(quincena=quincena)
+
     def horas_turno_completo(self, turno):
+        # Retorna horas totales del turno (incluye cruce de medianoche)
         inicio = turno.hora_inicio_obj()
         fin = turno.hora_fin_obj()
         if fin <= inicio:
@@ -112,6 +130,8 @@ class CalculadoraNomina:
         return False
 
     def calcular_recargo(self, turno):
+        """Calcula recargos de un turno según franja (diurna/nocturna) y festivo."""
+        # Calcula el valor de recargos del turno y guarda detalles para el desglose.
         horas_diurnas, horas_nocturnas = self.calcular_horas_por_franja(turno)
         festivo = turno.festivo
         valor_total = 0
@@ -156,10 +176,13 @@ class CalculadoraNomina:
     # TURNOS
     # ----------------------------
     def agregar_turno(self, turno):
+        """Agrega un turno base y suma únicamente los recargos correspondientes."""
+        # Agrega un turno base y suma recargos según la franja y si es festivo/dominical.
         valor = self.calcular_recargo(turno)
         self.devengado += valor
 
     def agregar_dispo(self, inicio, fin, festivo):
+        # Crea un turno especial "DISPO" y lo procesa como un turno normal.
         from models.turno import Turno
         t = Turno({
             "codigo": "DISPO",
@@ -174,23 +197,31 @@ class CalculadoraNomina:
     # EVENTOS ESPECIALES
     # ----------------------------
     def agregar_cp(self):
+        """Agrega un compensatorio (CP): suma una jornada completa al devengado."""
+        # CP: agrega un día equivalente (jornada completa) al devengado.
         valor = HORAS_JORNADA * VALOR_HORA
         self.devengado += valor
         self.cp_agregado = True  # Marcar que se agregó CP
 
     def agregar_incapacidad(self):
+        """Agrega un día de incapacidad: paga al 66.67% y ajusta días trabajados."""
+        # Incapacidad: reduce días trabajados y paga al 66.67%.
         self.dias_incapacidad += 1
         self.dias_trabajados -= 1
         valor = HORAS_JORNADA * VALOR_HORA * 0.6667
         self.devengado += valor
 
     def agregar_suspension(self):
+        """Agrega suspensión: descuenta una jornada del básico y ajusta días trabajados."""
+        # Suspensión: descuenta un día del básico.
         # Restar 6 horas (1 día) del básico
         valor = HORAS_JORNADA * VALOR_HORA
         self.devengado -= valor
         self.dias_trabajados -= 1
 
     def agregar_licencia(self):
+        """Agrega licencia no remunerada: descuenta una jornada del básico."""
+        # Licencia: descuenta un día del básico.
         # Restar 6 horas (1 día) del básico
         valor = HORAS_JORNADA * VALOR_HORA
         self.devengado -= valor
@@ -200,6 +231,7 @@ class CalculadoraNomina:
     # HORAS EXTRAS
     # ----------------------------
     def agregar_extra(self, minutos, recargo, nombre):
+        # Agrega una hora extra: base por minuto * factor de recargo.
         base = minutos * VALOR_MINUTO
         valor = base * recargo
         self.devengado += valor
@@ -210,9 +242,12 @@ class CalculadoraNomina:
     # DEDUCCIONES
     # ----------------------------
     def agregar_deduccion_manual(self, nombre, valor):
+        # Deducción ingresada por el usuario.
         self.deducciones_manuales.append((nombre, valor))
 
     def get_deducciones_desglosadas(self):
+        """Retorna el detalle de deducciones (base + manuales) como dict concepto->valor."""
+        # Retorna deducciones base (porcentaje del devengado) + deducciones manuales.
         deducciones = {}
         # Calcular porcentajes del devengado (sin cívicas ni auxilio, que no son salario)
         for concepto, porcentaje in DEDUCCIONES_BASE.items():
@@ -232,12 +267,16 @@ class CalculadoraNomina:
     # CÍVICAS Y AUXILIO
     # ----------------------------
     def tiene_cp(self):
+        # Indica si se agregó CP (impacta el cálculo de cívicas).
         return self.cp_agregado
 
     def tiene_suspension(self):
+        # Detecta suspensión/licencia (impacta el cálculo de cívicas).
         return self.dias_trabajados < 15 and self.dias_incapacidad == 0
 
     def calcular_civicas(self):
+        """Calcula cantidad y valor de cívicas según CP y suspensión/licencia."""
+        # Calcula la cantidad/valor de cívicas según reglas y eventos agregados.
         # Comenzar con 22 civicas
         self.civicas_cantidad = PASAJES_CIVICA_CANTIDAD
         
@@ -260,6 +299,7 @@ class CalculadoraNomina:
         return self.civicas_valor
 
     def total_auxilio(self):
+        """Calcula auxilio de transporte para quincena 30, descontando días no laborados."""
         # Auxilio de transporte: $200.000 mensuales = $6.666,67 por día (200.000/30)
         # Se paga completo en quincena 30, pero se resta por cada día de suspensión/licencia/incapacidad
         if self.quincena == "30":
