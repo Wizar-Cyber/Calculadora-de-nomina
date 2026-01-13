@@ -595,7 +595,7 @@ with col_dev:
 
     if dias_incap > 0:
         val_incap = dias_incap * valor_dia * 0.6667
-        st.write(f"INCAPACIDAD: {dias_incap} @ 66.67% | ${val_incap:,.0f}")
+        st.write(f"INCAPACIDAD: {dias_incap} día(s) (66.67%) | ${val_incap:,.0f}")
     
     # Cívicas
     if civicas > 0:
